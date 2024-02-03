@@ -1,9 +1,7 @@
 package Letter;
 
 import Point.Point2d;
-import Shape.BaseShape;
-import Shape.Rectangle;
-import Shape.Ellipse;
+import Shape.*;
 
 public final class LetterFactory {
 
@@ -33,107 +31,92 @@ public final class LetterFactory {
         return obliqueBar.rotate(angle);
     }
 
+    /**
+     * Create the letter A graphically
+     * @return BaseShape containing the letter A
+     */
     public static BaseShape create_A()  {
-        Rectangle horizontalBar = newBarHorizontal();
-        Rectangle leftVerticalBar = newBarVertical();
-        Rectangle rightVerticalBar = newBarVertical();
-
-        // Translation et rotation du leftVerticalBar
-        leftVerticalBar = leftVerticalBar.rotate(Math.PI / 12);
-        leftVerticalBar = (Rectangle) leftVerticalBar.add(horizontalBar).translate(leftVerticalBar.cloneCoords(), new Point2d(-(barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0));
-
-        /**
-         leftVerticalBar = leftVerticalBar.add(horizontalBar.clone().translate(new Point2d(-(barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0)));
-         rightVerticalBar = rightVerticalBar.add(horizontalBar.clone().translate(new Point2d((barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0)));
-
-         */
-        // Translation et rotation du rightVerticalBar
-        rightVerticalBar = rightVerticalBar.rotate(-Math.PI / 12);
-        rightVerticalBar = (Rectangle) rightVerticalBar.add(horizontalBar).translate(rightVerticalBar.cloneCoords(), new Point2d((barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0));
-
-        return horizontalBar.add(leftVerticalBar).add(rightVerticalBar);
+        Rectangle base = new Rectangle(halfMaxWidth, halfStripeThickness);
+        Rectangle diagonal = new Rectangle(halfStripeThickness, maxHeight);
+        diagonal.rotate(diagonal.getCoords(), -3*Math.PI/64);
+        diagonal.translate(diagonal.getCoords(), new Point2d(halfMaxWidth/2, 0.0));
+        base.add(diagonal);
+        diagonal.rotate(diagonal.getCoords(), 3*Math.PI/32);
+        diagonal.translate(diagonal.getCoords(), new Point2d(-halfMaxWidth, 0.0));
+        return base.add(diagonal);
     }
 
+    /**
+     * Create the letter B graphically
+     * @return BaseShape containing the letter B
+     */
     public static BaseShape create_B() {
-        BaseShape createB = create_H();
-        Rectangle leftVerticalBar = newBarVertical();
-        Rectangle rightVerticalBar = newBarVertical();
-
-        // Translation et rotation du leftVerticalBar
-        leftVerticalBar = leftVerticalBar.rotate(Math.PI / 12);
-        leftVerticalBar = (Rectangle) leftVerticalBar.add(createB).translate(leftVerticalBar.cloneCoords(),new Point2d(-(barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0));
-
-        // Translation et rotation du rightVerticalBar
-        rightVerticalBar = rightVerticalBar.rotate(-Math.PI / 12);
-        rightVerticalBar = (Rectangle) rightVerticalBar.add(createB).translate(rightVerticalBar.cloneCoords(), new Point2d((barHorizontalWidth / 2.5 - barVerticalWidth / 2), 30.0));
-
-        createB.add(leftVerticalBar).add(rightVerticalBar);
-        return createB;
+        Rectangle stripe = new Rectangle(maxWidth/3, maxHeight);
+        stripe.translate(stripe.getCoords(),new Point2d(-maxWidth/3.0,0.0));
+        Circle circle = new Circle(2.2*halfMaxWidth+halfStripeThickness);
+        circle.remove(new Circle(2.2*halfMaxWidth));
+        circle.translate(circle.getCoords(), new Point2d(halfStripeThickness, maxHeight/4));
+        stripe.add(circle);
+        circle.translate(circle.getCoords(), new Point2d(0.0, -maxHeight/2));
+        return stripe.add(circle);
     }
 
+    /**
+     * Create the letter C graphically
+     * @return BaseShape containing the letter C
+     */
     public static BaseShape create_C() {
-        BaseShape OEllipse = create_O();
-        Rectangle barHorizontalMiddle = newBarOblique(newBarHorizontal(), Math.PI / 2);
-
-        // Translation du barHorizontalMiddle
-        barHorizontalMiddle =(Rectangle) barHorizontalMiddle.translate(barHorizontalMiddle.cloneCoords(), new Point2d((barHorizontalWidth / 2 - barVerticalWidth / 2), 0.0));
-
-
-
-        return OEllipse.remove(barHorizontalMiddle);
+        Ellipse base = new Ellipse(maxWidth, maxHeight);
+        base.remove(new Ellipse(maxWidth-stripeThickness, maxHeight-stripeThickness));
+        Rectangle hole = new Rectangle(maxWidth, maxHeight-2*stripeThickness);
+        hole.translate(hole.getCoords(), new Point2d(halfMaxWidth, 0.0));
+        return base.remove(hole);
     }
 
+    /**
+     * Create the letter E graphically
+     * @return BaseShape containing the letter E
+     */
     public static BaseShape create_E() {
-        Double degrees90 = Math.toRadians(90);
-        Double spacing = stripeThickness * 2;
-        BaseShape mainStripe = new Rectangle(stripeThickness / 2, spacing);
-        BaseShape middleStripe = mainStripe.rotate(degrees90).translate(new Point2d(0.0, 0.0));
-
-        BaseShape outsideEllipse =  new Ellipse(spacing , halfMaxHeight);
-        for(Point2d point: outsideEllipse.getCoords()){
-            if ((point.X() > 0.0) && (point.Y() > 0) && (point.Y() < 50))
-                outsideEllipse.remove(point);
-        }
-
-        BaseShape insideEllipse =  new Ellipse(spacing -2 , halfMaxHeight - 5);
-        for(Point2d point: insideEllipse.getCoords()){
-            if ((point.X() > 0.0) && (point.Y() > 0.0) && (point.Y() < 50))
-                insideEllipse.remove(point);
-        }
-
-        middleStripe.add(insideEllipse);
-        middleStripe.add(outsideEllipse);
-        return middleStripe;
+        Rectangle base = new Rectangle(maxWidth,maxHeight);
+        Square hole = new Square(maxWidth);
+        hole.translate(hole.getCoords(), new Point2d(halfStripeThickness, halfMaxHeight/2));
+        base.remove(hole);
+        hole.translate(hole.getCoords(), new Point2d(0.0, -halfMaxHeight));
+        return base.remove(hole);
     }
 
+    /**
+     * Create the letter H graphically
+     * @return BaseShape containing the letter H
+     */
     public static BaseShape create_H() {
-        Double degrees90 = Math.toRadians(90);
-        Double spacing = stripeThickness * 4;
-        BaseShape mainStripe = new Rectangle(stripeThickness / 2, halfMaxHeight);
-        BaseShape leftStripe = mainStripe.translate(new Point2d(-spacing / 2, 0.0));
-        BaseShape middleStripe = new Rectangle(stripeThickness / 2, spacing / 2).rotate(degrees90).translate(new Point2d(0.0, 0.0));
-        BaseShape rightStripe = mainStripe.translate(new Point2d(spacing / 2, 0.0));
-        leftStripe.add(middleStripe);
-        leftStripe.add(rightStripe);
-        return leftStripe;
+        Rectangle base = new Rectangle(maxWidth+halfMaxWidth,maxHeight);
+        Rectangle hole = new Rectangle(maxWidth, halfMaxHeight);
+        hole.translate(hole.getCoords(), new Point2d(0.0, halfMaxHeight/2 + halfStripeThickness));
+        base.remove(hole);
+        hole.translate(hole.getCoords(), new Point2d(0.0, -halfMaxHeight - stripeThickness));
+        return base.remove(hole);
     }
 
+    /**
+     * Create the letter N graphically
+     * @return BaseShape containing the letter N
+     */
     public static BaseShape create_N() {
-        BaseShape createH = create_H();
-        Rectangle barOblique = newBarOblique(newBarVertical(), -Math.PI / 12);
-
-        // Translate et ajoute la barre oblique
-        createH.add(barOblique.translate(new Point2d(0.0, -halfMaxHeight + barVerticalHeight / 2)));
-
-        return createH;
+        Rectangle stripes = new Rectangle(maxWidth, maxHeight);
+        stripes.remove(new Rectangle(maxWidth-stripeThickness,maxHeight));
+        Rectangle diagonal = new Rectangle(halfStripeThickness, maxHeight);
+        diagonal.rotate(diagonal.getCoords(), -3*Math.PI/32);
+        return stripes.add(diagonal);
     }
 
+    /**
+     * Create the letter O graphically
+     * @return BaseShape containing the letter O
+     */
     public static BaseShape create_O() {
-        BaseShape mainStripe = new Ellipse(stripeThickness * 3, halfMaxHeight);
-        BaseShape insideStripe = new Ellipse(stripeThickness * 3 - 7, halfMaxHeight - 7);
-        BaseShape secondInsideStripe = new Ellipse(stripeThickness * 3 - 14, halfMaxHeight - 14);
-        mainStripe.add(insideStripe);
-        mainStripe.add(secondInsideStripe);
-        return mainStripe;
+        return new Ellipse(maxWidth, maxHeight).remove(new Ellipse(maxWidth-stripeThickness, maxHeight-stripeThickness));
     }
+
 }
