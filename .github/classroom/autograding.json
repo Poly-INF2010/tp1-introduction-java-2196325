@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Point&Shape",
+      "setup": "chmod +x ./gradlew ",
+      "run": "./gradlew test --tests \"*.Point.*\" --tests \"*.Shape.*\"",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": null
+    }
+  ]
+}
