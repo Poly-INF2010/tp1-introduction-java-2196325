@@ -1,0 +1,5 @@
+Points	5/5
+Formes	5/5
+Lettres	5/5
+Qualité de code et Design	5/5
+Total	20/20
